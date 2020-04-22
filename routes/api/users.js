@@ -48,4 +48,29 @@ router.post("/register", (req, res) => {
     });
 });
 
+//@route    POST api/users/login
+//@des      Login User / Returning JWT Token
+//@access   Public
+router.post("/login", (req, res) => {
+  const email = req.body.email; // im using bodyparser
+  const password = req.body.password;
+
+  // Find user by email, using user model mongoose
+  User.findOne({ email }).then((user) => {
+    // Check for user
+    if (!user) {
+      return res.status(400).json({ email: "User not found!" });
+    }
+
+    // Check Password (remember: the pass that user put is in text, the pass in the DB is in hash) use bcrypt to compare both.
+    bcrypt.compare(password, user.password).then((isMAtch) => {
+      if (isMAtch) {
+        res.json({ msg: "Success !!" });
+      } else {
+        return res.status(400).json({ password: "Password incorrect!!" });
+      }
+    });
+  });
+});
+
 module.exports = router;
