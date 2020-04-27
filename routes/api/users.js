@@ -6,6 +6,10 @@ const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
 const passport = require("passport");
 
+// Load Input VAlidation
+const validateRegisterInput = require("../../validation/register");
+const validateLoginInput = require("../../validation/login");
+
 // Load User model
 const User = require("../../models/User");
 
@@ -18,6 +22,13 @@ router.get("/test", (req, res) => res.json({ msg: "Users Works!" }));
 //@des      Register user
 //@access   Public
 router.post("/register", (req, res) => {
+  const { errors, isValid } = validateRegisterInput(req.body);
+
+  // Check Validation (first line of validations)
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   User.findOne({ email: req.body.email }) // verify no duplicated email
     .then((user) => {
       if (user) {
@@ -55,6 +66,13 @@ router.post("/register", (req, res) => {
 //@des      Login User / Returning JWT Token
 //@access   Public
 router.post("/login", (req, res) => {
+  const { errors, isValid } = validateLoginInput(req.body);
+
+  // Check Validation (first line of validations)
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   const email = req.body.email; // im using bodyparser
   const password = req.body.password;
 
@@ -62,7 +80,8 @@ router.post("/login", (req, res) => {
   User.findOne({ email }).then((user) => {
     // Check for user
     if (!user) {
-      return res.status(400).json({ email: "User not found!" });
+      errors.email = "User not found !";
+      return res.status(400).json(errors);
     }
 
     // Check Password (remember: the pass that user put is in text, the pass in the DB is in hash) use bcrypt to compare both.
@@ -91,7 +110,8 @@ router.post("/login", (req, res) => {
           }
         );
       } else {
-        return res.status(400).json({ password: "Password incorrect!!" });
+        errors.password = "Password incorrect";
+        return res.status(400).json(errors);
       }
     });
   });
