@@ -1,0 +1,122 @@
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
+// Create Schema
+const ProfileSchema = new Schema({
+  user: {
+    type: Schema.Types.ObjectId, // Asociate user by id
+    ref: "users",
+  },
+  handle: {
+    type: String,
+    required: true,
+    max: 35,
+  },
+  company: {
+    type: String,
+  },
+  website: {
+    type: String,
+  },
+  location: {
+    type: String,
+  },
+  status: {
+    // Junior Senior etc
+    type: String,
+    required: true,
+  },
+  skills: {
+    type: [String],
+    required: true,
+  },
+  bio: {
+    type: String,
+  },
+  gitHubUserName: {
+    type: String,
+  },
+  experience: [
+    {
+      title: {
+        type: String,
+        required: true,
+      },
+      company: {
+        type: String,
+        required: true,
+      },
+      location: {
+        type: String,
+        required: true,
+      },
+      from: {
+        type: Date,
+        required: true,
+      },
+      to: {
+        type: Date,
+      },
+      current: {
+        type: Boolean,
+        required: false,
+      },
+      description: {
+        type: String,
+      },
+    },
+  ],
+  education: [
+    {
+      school: {
+        type: String,
+        required: true,
+      },
+      degree: {
+        type: String,
+        required: true,
+      },
+      fieldOfStudy: {
+        type: String,
+        required: true,
+      },
+      from: {
+        type: Date,
+        required: true,
+      },
+      to: {
+        type: Date,
+      },
+      current: {
+        type: Boolean,
+        required: false,
+      },
+      description: {
+        type: String,
+      },
+    },
+  ],
+  social: {
+    linkedin: {
+      type: String,
+    },
+    youtube: {
+      type: String,
+    },
+    facebook: {
+      type: String,
+    },
+    twitter: {
+      type: String,
+    },
+    instagram: {
+      type: String,
+    },
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+module.exports = Profile = mongoose.model("profile", ProfileSchema);
