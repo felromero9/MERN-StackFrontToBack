@@ -52,7 +52,7 @@ router.post(
 
     // Check Validations
     if (!isValid) {
-      // Return any erros with 400 status
+      // Return any errors with 400 status
       return res.status(400).json(errors);
     }
 
@@ -88,7 +88,9 @@ router.post(
           { user: req.user.id },
           { $set: profileFields },
           { new: true }
-        ).then((profile) => res.json(profile));
+        )
+          .then((profile) => res.json(profile))
+          .catch((err) => res.status(400).json(err));
       } else {
         // If not exists will CREATE the profile
 
