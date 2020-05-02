@@ -30,6 +30,7 @@ router.get(
     const errors = {};
 
     Profile.findOne({ user: req.user.id })
+      .populate("user", ["name", "avatar"])
       .then((profile) => {
         if (!profile) {
           errors.noProfile = "There is no profile for this user!";
@@ -82,6 +83,9 @@ router.post(
     if (req.body.instagram) profileFields.social.instagram = req.body.instagram;
 
     Profile.findOne({ user: req.user.id }).then((profile) => {
+      // if (!ObjectId.isValid(req.user.id)) {
+      //   return Error({ status: 422 }).catch((err) => res.status(400).json(err));
+      // }
       if (profile) {
         // If exists then will UPDATE the profile
         Profile.findByIdAndUpdate(
