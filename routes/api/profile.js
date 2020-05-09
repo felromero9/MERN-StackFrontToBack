@@ -88,7 +88,7 @@ router.post(
       // }
       if (profile) {
         // If exists then will UPDATE the profile
-        Profile.findByIdAndUpdate(
+        Profile.findOneAndUpdate(
           { user: req.user.id },
           { $set: profileFields },
           { new: true }
